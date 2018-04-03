@@ -26,10 +26,6 @@ Route::group(['middleware'=>'auth'],function(){
 
 	Route::get('myMails','MailController@index')->name('myMails');
 
-	Route::get('imageUpload','ImageUploadController@imageUpload')->name('imageUpload');
-
-	Route::post('imageUpload','ImageUploadController@imageUploadPost')->name('imagePost');
-
 	Route::post('getMailData','MailController@getData')->name('getMailData');
 
 	Route::get('404','MailController@pageNotFound')->name('404');
