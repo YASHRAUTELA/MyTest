@@ -4,4 +4,16 @@ finding address from geo location using google map
 
 multi page form in laravel using html and javascript
 
+added functionality of email verfication after registration
+
+add this function to the User model
+public function verifyUser(){
+        return $this->hasOne('App\VerifyUser');
+    }
+
+add this function to the VerifyMail Model
+public function user(){
+    	return $this->belongsTo('App\User','user_id');
+    }
+
 
