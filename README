@@ -17,3 +17,7 @@ public function user(){
     }
 
 
+install guzzle using
+
+composer require guzzlehttp/guzzle
+
