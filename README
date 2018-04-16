@@ -30,3 +30,7 @@ install guzzle using
 
 composer require guzzlehttp/guzzle
 
+
+Changes to be done in ResetPassword Laravel 5.5
+vendor/laravel/framework/src/Illuminate/Auth/Notifications/ResetPassword.php
+
