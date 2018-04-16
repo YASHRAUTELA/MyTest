@@ -4,7 +4,16 @@ finding address from geo location using google map
 
 multi page form in laravel using html and javascript
 
-added functionality of email verfication after registration
+To implement the functionality of email verfication after registration check out the following files:
+1)AuthRegistrationController.php (in actual folder view Auth/RegistrationController.php).
+2)LoginController.php (Controller/LoginController).
+3)VerifyMail
+4)login.blade.php
+5)web.php(                  Route::get('/user/verify/{token}', 'Auth\RegisterController@verifyUser');          )
+6)mail.blade.php
+
+for more details refer to the 5ballons( https://www.5balloons.info/user-email-verification-and-account-activation-in-laravel-5-5/ ).
+
 
 add this function to the User model
 public function verifyUser(){
