@@ -34,3 +34,20 @@ composer require guzzlehttp/guzzle
 Changes to be done in ResetPassword Laravel 5.5
 vendor/laravel/framework/src/Illuminate/Auth/Notifications/ResetPassword.php
 
+
+ADMIN PANEL 
+Student,faculty, other admin changes
+adminDefault.blade.php
+admins.blade.php
+noAdmin.blade.php
+students.blade.php
+noStudent.blade.php
+faculties.blade.php
+noFaculty.blade.php
+updateAdmin.blade.php
+
+UserController.blade.php
+StudentController.blade.php
+FacultyController.blade.php
+
+
