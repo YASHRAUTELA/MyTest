@@ -62,11 +62,11 @@
 							<label>DOB</label>
 						</div>
 						<div class="col-sm-4">
-							<div class="form-group{{ $errors->has('date') ? ' has-error' : '' }}">
-								<input class="form-control" type="date" id="date" name="date" value="{{$data->date}}" required>
-								@if ($errors->has('date'))
+							<div class="form-group{{ $errors->has('dob') ? ' has-error' : '' }}">
+								<input class="form-control" type="date" id="dob" name="dob" value="{{$data->dob}}" required>
+								@if ($errors->has('dob'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('date') }}</strong>
+                                        <strong>{{ $errors->first('dob') }}</strong>
                                     </span>
                             	@endif
 							</div>

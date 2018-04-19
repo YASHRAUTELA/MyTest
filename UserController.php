@@ -52,13 +52,13 @@ class UserController extends Controller
 			'id'=>'required',
 			'name'=>'required',
 			'email'=>'required|email',
-			'date'=>'required|date'
+			'dob'=>'required|date'
 			]);
 
 		$admin=User::find($request->id);
 		$admin->name=$request->name;
 		$admin->email=$request->email;
-		$admin->dob=$request->date;
+		$admin->dob=$request->dob;
 		if($admin->save()){
 			return redirect()->route('smsAdmin')->with("update_success","Record updated successfully");
 		}
