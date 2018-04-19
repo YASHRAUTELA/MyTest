@@ -12,7 +12,7 @@
 					@endif
 
 			
-				<form method="POST" action="#">
+				<form method="POST" action="{{route('updateStudent')}}">
 				{{csrf_field()}}
 					<div class="row">
 						<div class="col-sm-2">
@@ -34,7 +34,7 @@
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-								<input class="form-control" type="text" id="name" name="name" value="{{$data->name}}" required>
+								<input class="form-control" type="text" id="name" name="name" maxlength="50" value="{{$data->name}}" required>
 								@if ($errors->has('name'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('name') }}</strong>
@@ -50,7 +50,7 @@
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-								<input class="form-control" type="email" id="email" name="email" value="{{$data->email}}" required>
+								<input class="form-control" type="email" id="email" name="email" maxlength="50" value="{{$data->email}}" required>
 								@if ($errors->has('email'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -62,11 +62,11 @@
 							<label>DOB</label>
 						</div>
 						<div class="col-sm-4">
-							<div class="form-group{{ $errors->has('date') ? ' has-error' : '' }}">
-								<input class="form-control" type="date" id="date" name="date" value="" required>
-								@if ($errors->has('date'))
+							<div class="form-group{{ $errors->has('dob') ? ' has-error' : '' }}">
+								<input class="form-control" type="date" id="dob" name="dob" value="{{$data->dob}}" required>
+								@if ($errors->has('dob'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('date') }}</strong>
+                                        <strong>{{ $errors->first('dob') }}</strong>
                                     </span>
                             	@endif
 							</div>
@@ -79,7 +79,7 @@
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group{{ $errors->has('father_name') ? ' has-error' : '' }}">
-								<input class="form-control" type="text" id="father_name" name="father_name" value="{{$data->father_name}}" required>
+								<input class="form-control" type="text" id="father_name" name="father_name" maxlength="50" value="{{$data->father_name}}" required>
 								@if ($errors->has('father_name'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('father_name') }}</strong>
@@ -92,7 +92,7 @@
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group{{ $errors->has('mother_name') ? ' has-error' : '' }}">
-								<input class="form-control" type="text" id="mother_name" name="mother_name" value="{{$data->mother_name}}" required>
+								<input class="form-control" type="text" id="mother_name" name="mother_name" maxlength="50" value="{{$data->mother_name}}" required>
 								@if ($errors->has('mother_name'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('mother_name') }}</strong>
@@ -104,19 +104,55 @@
 
 					<div class="row">
 						<div class="col-sm-2">
-							<label>City</label>
+							<label>Address</label>
 						</div>
 						<div class="col-sm-4">
-							<div class="form-group">
-								<input type="" name="">
+							<div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+								<textarea class="form-control" id="address" name="address" rows="4" cols="50" maxlength="100">{{$data->address}}
+								</textarea>
+								@if ($errors->has('address'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('address') }}</strong>
+                                    </span>
+                            	@endif
 							</div>
 						</div>
+						
+					</div>
+
+					<div class="row">
 						<div class="col-sm-2">
 							<label>State</label>
 						</div>
 						<div class="col-sm-4">
-							<div class="form-group">
-								<input type="" name="">
+							<div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
+								<select id="state" name="state" class="form-control">
+				                  	<option>Enter state</option>
+				                </select>
+				                @if ($errors->has('state'))
+		                            <span class="help-block">
+		                            	<strong>{{ $errors->first('state') }}</strong>
+		                            </span>
+		                        @endif
+							</div>
+						</div>
+						<div class="col-sm-2">
+							<label>City</label>
+						</div>
+						<div class="col-sm-4">
+							<div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
+								<select id="city" name="city" class="form-control" readonly="true">
+										<option value=<?php echo(isset($data->city_id)?$data->city_id:''); ?> selected="selected" >
+
+											<?php echo(isset($data->city_id)?$data->city_name:''); ?>
+											
+										</option>
+										@if ($errors->has('city'))
+		                                    <span class="help-block">
+		                                        <strong>{{ $errors->first('city') }}</strong>
+		                                    </span>
+		                            	@endif
+				                </select>
 							</div>
 						</div>
 					</div>
@@ -139,8 +175,15 @@
 							<label>Course</label>
 						</div>
 						<div class="col-sm-4">
-							<div class="form-group">
-								<input type="" name="">
+							<div class="form-group{{ $errors->has('course') ? ' has-error' : '' }}">
+								<select id="course" name="course" class="form-control" >
+				                 	<option>Select Course</option>
+				                </select>
+				                @if ($errors->has('course'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('course') }}</strong>
+                                    </span>
+                            	@endif
 							</div>
 						</div>
 					</div>
@@ -159,24 +202,13 @@
                             	@endif
 							</div>
 						</div>
-						<div class="col-sm-2">
-							<label>Session</label>
-						</div>
-						<div class="col-sm-4">
-							<div class="form-group">
-								<input class="form-control" type="text" id="session" name="session" value="" required readonly="true">
-								
-							</div>
-						</div>
-					</div>
 
-					<div class="row">
 						<div class="col-sm-2">
 							<label>Pin</label>
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group{{ $errors->has('pin') ? ' has-error' : '' }}">
-								<input class="form-control" type="text" id="pin" name="pin" value="{{$data->pin}}" required>
+								<input class="form-control" type="number" id="pin" name="pin" value="{{$data->pin}}" required>
 								@if ($errors->has('pin'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('pin') }}</strong>
@@ -184,12 +216,7 @@
                             	@endif
 							</div>
 						</div>
-						<div class="col-sm-2">
-							
-						</div>
-						<div class="col-sm-4">
-							
-						</div>
+						
 					</div>
 
 					<div class="row">
@@ -200,3 +227,97 @@
 				</form>
 @endsection
 
+@push('script')
+
+<script type="text/javascript">
+	function myFunction(){
+        
+            $.ajax({
+                type:'GET',
+                url:'/getState',
+                success:function(data){
+                    console.log(data);
+                    $("#state").empty();
+                    $("#state").append("<option value=''>Select State</option>");
+                    $.each(data,function(key,value){
+                    	var state_id='<?php echo($data->state_id); ?>';
+                    	console.log(state_id);
+                    	if(value.id==state_id){
+                    		$("#state").append("<option selected='selected' value='"+value.id+"'>"+value.state_name+"</option>");
+                    	}else{
+                    		$("#state").append("<option value='"+value.id+"'>"+value.state_name+"</option>");
+                    	}
+                        
+                    });
+                    
+                }
+            });
+
+            $.ajax({
+                type:'GET',
+                url:'/getUserDetails',
+                success:function(data){
+                    console.log(data);
+                    $("#user_id").empty();
+                    $("#user_id").append("<option value=''>Select Student</option>");
+                    $.each(data,function(key,value){
+
+                        $("#user_id").append("<option value='"+value.id+"'>"+value.name+"</option>");
+                    });
+                    
+                }
+            });
+
+            $.ajax({
+                type:'GET',
+                url:'/getCourse',
+                success:function(data){
+                    console.log(data);
+                    $("#course").empty();
+                    $("#course").append("<option value=''>Select Course</option>");
+                    $.each(data,function(key,value){
+                    	var course_id='<?php echo($data->course_id); ?>';
+                    	if(value.id==course_id){
+                    		$("#course").append("<option selected='selected' value='"+value.id+"'>"+value.course+"</option>");
+                    	}else{
+                    		$("#course").append("<option value='"+value.id+"'>"+value.course+"</option>");
+                    	}
+                    	
+                        
+                    });
+                    
+                }
+            });
+        
+    }
+
+    $(document).ready(function(){
+      $('#state').change(function(){
+        $.ajax({
+          type:'POST',
+          url:'/getCity',
+          data:{
+            '_token':$('input[name="_token"]').val(),
+            'state_id':$("#state").val()
+          },
+          success:function(data){
+            console.log(data);
+            $("#city").empty();
+            $("#city").append("<option value=''>Select City</option>");
+            $.each(data,function(key,value){
+            	var city_id='<?php echo($data->city_id); ?>';
+                if(value.id==city_id){
+                	$("#city").append("<option selected='selected' value='"+value.id+"'>"+value.city_name+"</option>");
+                }else{
+                	$("#city").append("<option value='"+value.id+"'>"+value.city_name+"</option>");
+                }
+              $("#city").removeAttr("readonly");
+            });
+          }
+        });
+      });
+    });
+
+</script>
+
+@endpush

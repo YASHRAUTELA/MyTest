@@ -13,13 +13,10 @@ class StudentController extends Controller
 {
 
     /*
-    *Rendering student data to the admin Panel
+    *Rendering all student data to the admin Panel
     */
     public function getStudent(){
-        /*$student_data=DB::table('users')->whereIn('id',function($query){
-            $query->select('user_id')->from('students');
-            })
-        ->get();*/
+        
         $student_data=User::where('role_id','=',3)->get();
 
         if($student_data->count()){
@@ -125,7 +122,6 @@ class StudentController extends Controller
      */
     public function edit($id)
     {
-        /*select c.city_name,st.state_name,cr.course,s.* from students s INNER JOIN users u on u.id=s.user_id INNER JOIN cities c on c.id=s.city_id INNER JOIN states st on st.id=s.state_id INNER JOIN courses cr on cr.id= s.course_id WHERE s.user_id=19*/
 
         $student_data=DB::table('students as s')
                         ->join('users as u','u.id','=','s.user_id')
@@ -138,17 +134,35 @@ class StudentController extends Controller
 
         
         /*echo "<pre>";
-        print_r($student_data[0]);
+        print_r($student_data[0]->id);
         echo "<br>";
+        print_r($student_data);
         exit;*/
         if($student_data->count()){
             return view('admin.updateStudent')->with('data',$student_data[0]);
 
         }
         else{
+            /*$pages_array[] = (object) array('slug' => 'xxx', 'title' => 'etc')*/
+
+
             $user_data=User::find($id);
-            print_r($user_data->name);
-            echo "<br>hi";
+            /*echo "<pre>";
+            print_r($user_data->id);
+            exit;*/
+            if($user_data->exists()){
+                $user_data_temp[]=(object) array('id'=>$user_data->id,'name'=>$user_data->name,'email'=>$user_data->email,'image_title'=>$user_data->image_title,'dob'=>$user_data->dob,'city_name'=>'','state_name'=>'','course'=>'','address'=>'','city_id'=>'','state_id'=>'','contact'=>'','course_id'=>'','registration_date'=>'','session'=>'','pin'=>'','father_name'=>'','mother_name'=>'');
+                /*echo "<pre>";
+                print_r($user_data_temp);
+                echo "<br>";
+                print_r($user_data_temp[0]->name);
+                echo "<br>";
+                exit;*/
+                return view('admin.updateStudent')->with('data',$user_data_temp[0]);
+            }else{
+                return redirect()->back();
+            }
+            
         }
         exit;
 
@@ -168,17 +182,82 @@ class StudentController extends Controller
     {
         $student_data=$request->validate([
             'id'=>'required',
-            'name'=>'required',
+            'name'=>'required|max:50',
             'email'=>'required|email',
-            'date'=>'required|date'
+            'dob'=>'required|date',
+            'father_name'=>'required|min:3',
+            'mother_name'=>'required|min:3',
+            'state'=>'required',
+            'city'=>'required',
+            'contact'=>'required|max:10',
+            'course'=>'required',
+            'registration_date'=>'required|date',
+            'pin'=>'required',
+            'address'=>'required'
             ]);
+        
 
-        $student=User::find($request->id);
-        $student->name=$request->name;
-        $student->email=$request->email;
-        $student->dob=$request->date;
-        if($student->save()){
-            return redirect()->route('smsStudent')->with("update_success","Record updated successfully");
+
+        $course=Course::where('id','=',$request->course)->get();
+        $duration=$course[0]->duration;
+        $date = DateTime::createFromFormat("Y-m-d", $request->registration_date);
+        $year=$date->format("Y");
+        $lastyear=$year+$duration;
+        $session=$year."-".$lastyear;
+        
+       
+
+
+        $user_data=User::find($request->id);
+        $user_data->id=$request->id;
+        $user_data->name=$request->name;
+        $user_data->email=$request->email;
+        $user_data->dob=$request->dob;
+
+        if($user_data->save()){
+            $student_data=Student::where('user_id','=',$request->id)->get();
+            if($student_data->count()){
+
+                /*It will update student data if student already exists*/
+
+                $student_data=Student::where('user_id','=',$request->id)
+                                    ->update([
+                                        'father_name'=>$request->father_name,
+                                        'mother_name'=>$request->mother_name,
+                                        'state_id'=>$request->state,
+                                        'city_id'=>$request->city,
+                                        'contact'=>$request->contact,
+                                        'course_id'=>$request->course,
+                                        'registration_date'=>$request->registration_date,
+                                        'pin'=>$request->pin,
+                                        'address'=>$request->address,
+                                        'session'=>$session
+                                        ]);
+                return redirect()->route('smsStudent')->with("update_success","Record updated successfully");
+            }
+            else{
+                /*It will create a new student and executes in a case when user exists but student does not*/
+
+                $student_data=new Student;
+                $student_data->user_id=$request->id;
+                $student_data->address=$request->address;
+                $student_data->city_id=$request->city;
+                $student_data->state_id=$request->state;
+                $student_data->contact=$request->contact;
+                $student_data->course_id=$request->course;
+                $student_data->registration_date=$request->registration_date;
+                $student_data->session=$session;
+                $student_data->pin=$request->pin;
+                $student_data->father_name=$request->father_name;
+                $student_data->mother_name=$request->mother_name;
+                
+                if($student_data->save()){
+                    return redirect()->route('smsStudent')->with("update_success","Record updated successfully");
+                }
+                else{
+                    return redirect()->back()->with("update_failure","Record not updated, Please try again");
+                }
+            }
         }
         else{
             return redirect()->back()->with("update_failure","Record not updated, Please try again");
