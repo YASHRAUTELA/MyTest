@@ -144,6 +144,8 @@ Route::group(['middleware' => ['admin','auth']], function () {
 
 	Route::get('/getCourse','CourseController@getCourse');
 
+	Route::get('/getDepartment','DepartmentController@getDepartment');
+
 	/*
 	*Route for performing CRUD operation on Student Data
 	*/
@@ -156,7 +158,7 @@ Route::group(['middleware' => ['admin','auth']], function () {
 	*/
 	Route::get('/smsStudent','StudentController@getStudent')->name('smsStudent');
 
-	Route::get('/smsFaculty','FacultyController@getFaculty');
+	Route::get('/smsFaculty','FacultyController@getFaculty')->name('smsFaculty');
 
 	Route::get('/smsAdmin','UserController@getAdmin')->name('smsAdmin');
 
@@ -168,6 +170,10 @@ Route::group(['middleware' => ['admin','auth']], function () {
 
 	Route::post('/updateStudent','StudentController@update')->name('updateStudent');
 
+	Route::get('/editFaculty/{id}','FacultyController@edit');
+
+	Route::post('/updateFaculty','FacultyController@update')->name('updateFaculty');
+
 	/*
 	*Update operation performed by Admin
 	*/
@@ -175,6 +181,15 @@ Route::group(['middleware' => ['admin','auth']], function () {
 
 	Route::post('/updateAdmin','UserController@updateAdmin')->name('updateAdmin');
 
+	Route::get('/semester','SemesterController@create')->name('semester');
+
+	Route::get('/getCourseForSemester','CourseController@getNotUsedCourse')->name('getCourseForSemester');
+
+	Route::post('/addSemester','SemesterController@store')->name('addSemester');
+	
+	Route::get('/getDeleteCourseForSemester','CourseController@getUsedCourse')->name('getDeleteCourseForSemester');
+
+	Route::post('/deleteSemester','SemesterController@destroy')->name('deleteSemester');
 	});
 
 Route::get('import-export-view', 'ExcelController@importExportView')->name('import.export.view');
