@@ -3,7 +3,7 @@
 @section('others')
 	
 					@if (session('update_success'))
-					<div class="row">
+					<div class="row" id="flash">
 						<div class="col-md-8 col-md-offset-2  alert alert-success">
 							{{ session('update_success') }}
 						</div>	

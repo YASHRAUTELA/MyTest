@@ -2,7 +2,7 @@
 
 @section('others')
 					@if (session('update_success'))
-					<div class="row">
+					<div class="row" id="flash">
 						<div class="col-md-8 col-md-offset-2  alert alert-success">
 							{{ session('update_success') }}
 						</div>	
@@ -25,7 +25,7 @@
 						<div class="col-md-2 col-sm-3">{{$student->dob}}</div>
 						<div class="col-md-4 col-sm-3">
 							<a href="#" data-toggle="modal" onclick="studentInfo({{$student->id}})"  class="btn btn-success">Show</a>
-							<a href="{{url('/editStudent',$student->id)}}" class="btn btn-warning">Update</a>
+							<a href="{{url('/editStudent',$student->id)}}" class="btn btn-warning">Edit</a>
 							<a href="#" data-toggle="modal" onclick="deleteInfo({{$student->id}})" class="btn btn-danger">Remove</a>
 						</div>
 					</div>
@@ -163,7 +163,7 @@
             },
             success: function(data) {
             	console.log(data);
-            	window.location="{{route('smsStudent')}}";
+            	//window.location="{{route('smsStudent')}}";
             }
         });
 	}

@@ -1,8 +1,8 @@
 @extends('admin.adminDefault')
 
 @section('others')
-<a href="{{route('smsStudent')}}" class="btn btn-primary"><i class="fa fa-arrow-left"></i></a>
-			<h4 class="title" style="text-align: center;">Update Student</h4>
+<a href="{{route('smsFaculty')}}" class="btn btn-primary"><i class="fa fa-arrow-left"></i></a>
+			<h4 class="title" style="text-align: center;">Update Faculty</h4>
 					@if (session('update_failure'))
 					<div class="row">
 						<div class="col-md-8 col-md-offset-2  alert alert-danger">
@@ -12,7 +12,7 @@
 					@endif
 
 			
-				<form method="POST" action="{{route('updateStudent')}}">
+				<form method="POST" action="{{route('updateFaculty')}}">
 				{{csrf_field()}}
 					<div class="row">
 						<div class="col-sm-2">
@@ -172,16 +172,16 @@
 							</div>
 						</div>
 						<div class="col-sm-2">
-							<label>Course</label>
+							<label>Department</label>
 						</div>
 						<div class="col-sm-4">
-							<div class="form-group{{ $errors->has('course') ? ' has-error' : '' }}">
-								<select id="course" name="course" class="form-control" >
+							<div class="form-group{{ $errors->has('department') ? ' has-error' : '' }}">
+								<select id="department" name="department" class="form-control" >
 				                 	<option>Select Course</option>
 				                </select>
-				                @if ($errors->has('course'))
+				                @if ($errors->has('department'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('course') }}</strong>
+                                        <strong>{{ $errors->first('department') }}</strong>
                                     </span>
                             	@endif
 							</div>
@@ -190,14 +190,14 @@
 
 					<div class="row">
 						<div class="col-sm-2">
-							<label>Registration Date</label>
+							<label>Date of Joining</label>
 						</div>
 						<div class="col-sm-4">
-							<div class="form-group{{ $errors->has('registration_date') ? ' has-error' : '' }}">
-								<input class="form-control" type="date" id="registration_date" name="registration_date" value="{{$data->registration_date}}" required>
-								@if ($errors->has('registration_date'))
+							<div class="form-group{{ $errors->has('doj') ? ' has-error' : '' }}">
+								<input class="form-control" type="date" id="doj" name="doj" value="{{$data->doj}}" required>
+								@if ($errors->has('doj'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('registration_date') }}</strong>
+                                        <strong>{{ $errors->first('doj') }}</strong>
                                     </span>
                             	@endif
 							</div>
@@ -253,20 +253,19 @@
                 }
             });
 
-            
             $.ajax({
                 type:'GET',
-                url:'/getCourse',
+                url:'/getDepartment',
                 success:function(data){
                     console.log(data);
-                    $("#course").empty();
-                    $("#course").append("<option value=''>Select Course</option>");
+                    $("#department").empty();
+                    $("#department").append("<option value=''>Select Department</option>");
                     $.each(data,function(key,value){
-                    	var course_id='<?php echo($data->course_id); ?>';
-                    	if(value.id==course_id){
-                    		$("#course").append("<option selected='selected' value='"+value.id+"'>"+value.course+"</option>");
+                    	var department_id='<?php echo($data->department_id); ?>';
+                    	if(value.id==department_id){
+                    		$("#department").append("<option selected='selected' value='"+value.id+"'>"+value.department+"</option>");
                     	}else{
-                    		$("#course").append("<option value='"+value.id+"'>"+value.course+"</option>");
+                    		$("#department").append("<option value='"+value.id+"'>"+value.department+"</option>");
                     	}
                     	
                         

@@ -60,3 +60,13 @@
 
 
 @endsection
+
+@push('script')
+    <script type="text/javascript">
+        $(function(){
+            $('#flash').delay(500).fadeIn('normal',function(){
+                $(this).delay(2000).fadeOut();
+            });
+        });
+    </script>
+@endpush
