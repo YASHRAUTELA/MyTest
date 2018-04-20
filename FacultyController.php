@@ -75,9 +75,54 @@ class FacultyController extends Controller
      * @param  \App\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function edit(Faculty $faculty)
+    public function edit($id)
     {
-        //
+        $faculty_data=DB::table('faculties as f')
+                        ->join('users as u','u.id','=','f.user_id')
+                        ->join('departments as d','d.id','=','f.department_id')
+                        ->join('states as st','st.id','=','f.state_id')
+                        ->join('cities as ct','ct.id','=','f.city_id')
+                        ->where('f.user_id','=',$id)
+                        ->select('u.id','u.name','u.email','u.image_title','u.dob','ct.city_name','st.state_name','d.department','f.address','f.city_id','f.department_id','f.state_id','f.contact','f.doj','f.pin','f.father_name','f.mother_name')
+                        ->get();
+
+        
+        /*echo "<pre>";
+        print_r($faculty_data->id);
+        echo "<br>";
+        print_r($faculty_data->count());
+        exit;*/
+        if($faculty_data->count()){
+            /*echo "hello";
+            exit;*/
+            return view('admin.updateFaculty')->with('data',$faculty_data[0]);
+
+        }
+        else{
+            /*$pages_array[] = (object) array('slug' => 'xxx', 'title' => 'etc')*/
+
+
+            $user_data=User::find($id);
+            /*echo "<pre>";
+            print_r($user_data->id);
+            echo "<br>";
+            print_r($user_data);
+            exit;*/
+            if($user_data->exists()){
+                $user_data_temp[]=(object) array('id'=>$user_data->id,'name'=>$user_data->name,'email'=>$user_data->email,'image_title'=>$user_data->image_title,'dob'=>$user_data->dob,'city_name'=>'','state_name'=>'','doj'=>'','address'=>'','city_id'=>'','state_id'=>'','contact'=>'','department_id'=>'','pin'=>'','father_name'=>'','mother_name'=>'');
+                /*echo "<pre>";
+                print_r($user_data_temp[0]);
+                echo "<br>";
+                print_r($user_data_temp[0]->name);
+                echo "<br>";
+                exit;*/
+                return view('admin.updateFaculty')->with('data',$user_data_temp[0]);
+            }else{
+                return redirect()->back();
+            }
+            
+        }
+        exit;
     }
 
     /**
@@ -87,9 +132,81 @@ class FacultyController extends Controller
      * @param  \App\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Faculty $faculty)
+    public function update(Request $request)
     {
-        //
+        $faculty_data=$request->validate([
+            'id'=>'required',
+            'name'=>'required|max:50',
+            'email'=>'required|email',
+            'dob'=>'required|date',
+            'father_name'=>'required|min:3',
+            'mother_name'=>'required|min:3',
+            'state'=>'required',
+            'city'=>'required',
+            'contact'=>'required|max:10',
+            'department'=>'required',
+            'doj'=>'required|date',
+            'pin'=>'required',
+            'address'=>'required'
+            ]);
+        
+
+
+        $user_data=User::find($request->id);
+        /*echo "<pre>";
+        print_r($user_data);
+        exit;*/
+        // $user_data->id=$request->id;
+        $user_data->name=$request->name;
+        $user_data->email=$request->email;
+        $user_data->dob=$request->dob;
+
+        if($user_data->save()){
+            $faculty_data=Faculty::where('user_id','=',$request->id)->get();
+            if($faculty_data->count()){
+
+                /*It will update faculty data if his/her data already exists*/
+
+                $faculty_data=Faculty::where('user_id','=',$request->id)
+                                    ->update([
+                                        'father_name'=>$request->father_name,
+                                        'mother_name'=>$request->mother_name,
+                                        'state_id'=>$request->state,
+                                        'city_id'=>$request->city,
+                                        'contact'=>$request->contact,
+                                        'department_id'=>$request->department,
+                                        'doj'=>$request->doj,
+                                        'pin'=>$request->pin,
+                                        'address'=>$request->address
+                                        ]);
+                return redirect()->route('smsFaculty')->with("update_success","Record updated successfully");
+            }
+            else{
+                /*It will create a new faculty and executes in the case when user exists but his/her other details does not exist*/
+
+                $faculty_data=new Faculty;
+                $faculty_data->user_id=$request->id;
+                $faculty_data->address=$request->address;
+                $faculty_data->city_id=$request->city;
+                $faculty_data->state_id=$request->state;
+                $faculty_data->contact=$request->contact;
+                $faculty_data->department_id=$request->department;
+                $faculty_data->doj=$request->doj;
+                $faculty_data->pin=$request->pin;
+                $faculty_data->father_name=$request->father_name;
+                $faculty_data->mother_name=$request->mother_name;
+                
+                if($faculty_data->save()){
+                    return redirect()->route('smsFaculty')->with("update_success","Record updated successfully");
+                }
+                else{
+                    return redirect()->back()->with("update_failure","Record not updated, Please try again");
+                }
+            }
+        }
+        else{
+            return redirect()->back()->with("update_failure","Record not updated, Please try again");
+        }
     }
 
     /**

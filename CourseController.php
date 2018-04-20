@@ -4,9 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Course;
 use Illuminate\Http\Request;
+use DB;
 
 class CourseController extends Controller
 {
+
+    public function getUsedCourse(){
+        $result=DB::table('courses')
+                ->whereIn('id',function ($query) {
+                                $query->select(DB::raw('course_id'))
+                                  ->from('semesters')
+                                  ->whereRaw('semesters.course_id = courses.id');
+                            })
+                ->get();
+        return response()->json($result);
+    }
+
+    public function getNotUsedCourse(){
+        $result=DB::table('courses')
+                ->whereNotIn('id',function ($query) {
+                                $query->select(DB::raw('course_id'))
+                                  ->from('semesters')
+                                  ->whereRaw('semesters.course_id = courses.id');
+                            })
+                ->get();
+        return response()->json($result);
+    }
 
     public function getCourse(){
         $course_data=Course::all();

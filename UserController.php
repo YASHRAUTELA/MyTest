@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use DB;
 use App\Student;
 use App\Faculty;
+use App\Mail;
+use App\VerifyUser;
 class UserController extends Controller
 {
 
@@ -22,6 +24,7 @@ class UserController extends Controller
 			if($faculty->count()){
 				$faculty->delete();
 				$user->delete();
+
 				return response()->json('faculty deleted successfully');	
 			}
 			else{
@@ -31,7 +34,21 @@ class UserController extends Controller
 			
 
 		}else{
+
 			$student=Student::where('user_id','=',$request->id)->get();
+			
+			$verify_user=VerifyUser::where('user_id','=',$request->id)
+						->delete();
+
+			/*return response()->json($verify_user[0]);
+			exit;*/					
+
+			$student_mail=Mail::where('to_email','=',$user->email)
+								->orWhere('from_email','=',$user->email)
+								->delete();
+			
+			
+
 			if($student->count()){
 				$student->delete();
 				$user->delete();
@@ -50,7 +67,7 @@ class UserController extends Controller
 	public function updateAdmin(Request $request){
 		$admin_data=$request->validate([
 			'id'=>'required',
-			'name'=>'required',
+			'name'=>'required|min:3',
 			'email'=>'required|email',
 			'dob'=>'required|date'
 			]);
