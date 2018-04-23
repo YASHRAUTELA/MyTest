@@ -190,6 +190,20 @@ Route::group(['middleware' => ['admin','auth']], function () {
 	Route::get('/getDeleteCourseForSemester','CourseController@getUsedCourse')->name('getDeleteCourseForSemester');
 
 	Route::post('/deleteSemester','SemesterController@destroy')->name('deleteSemester');
+
+	Route::get('/subject','SubjectController@index')->name('subject');
+
+	Route::post('/addSubject','SubjectController@store')->name('addSubject');
+
+	Route::post('/getSubjectForCourse','SubjectController@getSubject');
+
+	Route::post('/getSemester','SemesterController@getSemester');
+
+	Route::post('/deleteSubject','SubjectController@destroy');
+
+	Route::get('/editSubject/{id}','SubjectController@edit');
+
+	Route::post('/update/subject','SubjectController@update')->name('updateSubject');
 	});
 
 Route::get('import-export-view', 'ExcelController@importExportView')->name('import.export.view');
