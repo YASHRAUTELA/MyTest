@@ -6,8 +6,17 @@ use App\Semester;
 use Illuminate\Http\Request;
 use App\Course;
 use DB;
+use App\Subject;
 class SemesterController extends Controller
 {
+
+    
+    
+    public function getSemester(Request $request){
+        // $course_id=$request->course_id;
+        $semester_data=Semester::where('course_id','=',$request->course_id)->get();
+        return response()->json($semester_data);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -104,17 +113,18 @@ class SemesterController extends Controller
      */
     public function destroy(Request $request)
     {
-        $semester_data=Semester::where('course_id','=',$request->course)->delete();
+        $semester_data=Semester::where('course_id','=',$request->course)->get();
+        foreach($semester_data as $data)
+        {
 
-        /*$semester_data=DB::table('semesters')
-                            ->join('courses','courses.id','=','semesters.course_id')
-                            ->select('semesters.*','courses.course')
-                            ->paginate(8);*/
-        /*echo "<pre>";
-        print_r($semester_data);
-        exit;*/
-        return redirect()->back();
-
+            $subject_data=Subject::where('semester_id','=',$data->id)->get();
+            if($subject_data->count()){
+                return redirect()->back()->with('error','data cannot be deleted because of foreign key constraint');
+            }
+        }
+       $semester_data=Semester::where('course_id','=',$request->course)->delete();
+        return redirect()->back()->with('success','data deleted successfully');
+        exit;
     }
 }
 
