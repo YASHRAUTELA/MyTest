@@ -185,12 +185,18 @@ Route::group(['middleware' => ['admin','auth']], function () {
 
 	Route::get('/getCourseForSemester','CourseController@getNotUsedCourse')->name('getCourseForSemester');
 
+	/*
+	*CRUD operations for semester by Admin
+	*/
 	Route::post('/addSemester','SemesterController@store')->name('addSemester');
 	
 	Route::get('/getDeleteCourseForSemester','CourseController@getUsedCourse')->name('getDeleteCourseForSemester');
 
 	Route::post('/deleteSemester','SemesterController@destroy')->name('deleteSemester');
 
+	/*
+	*CRUD operations for subjects by Admin
+	*/
 	Route::get('/subject','SubjectController@index')->name('subject');
 
 	Route::post('/addSubject','SubjectController@store')->name('addSubject');
@@ -204,6 +210,25 @@ Route::group(['middleware' => ['admin','auth']], function () {
 	Route::get('/editSubject/{id}','SubjectController@edit');
 
 	Route::post('/update/subject','SubjectController@update')->name('updateSubject');
+
+	/*
+	*CRUD operations for marks by Admin
+	*/
+	Route::get('/marks','MarkController@index')->name('marks');
+
+	Route::get('/getStudent','StudentController@getStudentForMarks');
+
+	Route::post('/getStudentCourse','StudentController@getStudentCourse');
+
+	Route::post('/getCourseSemesterSubject','SubjectController@getSubject');
+
+	Route::post('/addMarks','MarkController@store')->name('addMarks');
+
+	Route::get('/editMarks/{id}','MarkController@edit');
+
+	Route::post('/update/marks','MarkController@update')->name('updateSubject');
+
+	Route::post('/deleteMarks','MarkController@destroy')->name('deleteMarks');
 	});
 
 Route::get('import-export-view', 'ExcelController@importExportView')->name('import.export.view');

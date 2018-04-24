@@ -12,7 +12,10 @@ class SubjectController extends Controller
     *rendering all the subjects for the selected course
     */
     public function getSubject(Request $request){
-
+        $semester_id=$request->semester_id;
+        $subject=Subject::where('semester_id','=',$semester_id)->get();
+        return response()->json($subject);
+        // return response()->json($semester_id);
     }
     /**
      * Display a listing of the resource.

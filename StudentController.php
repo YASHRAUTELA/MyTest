@@ -11,6 +11,32 @@ use DB;
 
 class StudentController extends Controller
 {
+    public function getStudentCourse(Request $request){
+        
+
+        $course_data=DB::table('courses')
+                    ->join('students','students.course_id','=','courses.id')
+                    ->where('students.id','=',$request->student_id)
+                    ->select('courses.id','courses.course','students.id as student_id')
+                    ->get();
+       
+        return response()->json($course_data[0]);
+       
+    }
+
+    /*
+    *Rendering all the students for entering the marks
+    */
+    public function getStudentForMarks(){
+        /*$student_data=User::where('role_id','=',3)->get();*/
+        
+        $student_data=DB::table('students')
+                    ->join('users','users.id','=','students.user_id')
+                    ->where('users.role_id','=',3)
+                    ->select('students.id','users.name','users.id as user_id')
+                    ->get();
+        return response()->json($student_data);
+    }
 
     /*
     *Rendering all student data to the admin Panel
