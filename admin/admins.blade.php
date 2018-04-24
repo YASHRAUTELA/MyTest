@@ -28,7 +28,9 @@
 						<div class="col-md-4 col-sm-3">
 							<a href="#" data-toggle="modal" onclick="adminInfo({{$admin->id}})" class="btn btn-success">View</a>
 							<a href="{{url('/editAdmin',$admin->id)}}" class="btn btn-warning">Edit</a>
+							@if(Auth::user()->role_id!=1)
 							<a href="#" data-toggle="modal" onclick="deleteInfo({{$admin->id}})" class="btn btn-danger">Remove</a>
+							@endif
 						</div>
 					</div>
 					@endforeach

@@ -163,10 +163,16 @@
             },
             success: function(data) {
             	console.log(data);
-            	//window.location="{{route('smsStudent')}}";
+            	window.location="{{route('smsStudent')}}";
             }
         });
 	}
+
+	$(function(){
+        $('#flash').delay(500).fadeIn('normal',function(){
+            $(this).delay(2000).fadeOut();
+        });
+    });
 </script>
 
 @endpush
