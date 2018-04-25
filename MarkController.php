@@ -20,10 +20,11 @@ class MarkController extends Controller
             ->join('courses','courses.id','=','marks.course_id')
             ->join('semesters','semesters.id','=','marks.semester_id')
             ->join('subjects','subjects.id','=','marks.subject_id')
+            ->join('exams','exams.id','=','marks.exam_id')
             ->join('users','users.id','=','students.user_id')
-            ->select('marks.*','users.name','courses.course','semesters.semester','subjects.subject')
+            ->select('marks.*','users.name','courses.course','semesters.semester','subjects.subject','exams.exam_type')
             ->get();
-        
+        // dd($marks);
         return view('admin.marks')->with('marks',$marks);
     }
 
@@ -50,6 +51,7 @@ class MarkController extends Controller
             'course'=>'required',
             'semester'=>'required',
             'subject'=>'required',
+            'exam'=>'required',
             'marks_obtained'=>'required|integer|max:100',
             'total_marks'=>'required|integer|max:100'
             ]);
@@ -58,9 +60,10 @@ class MarkController extends Controller
                         ->where('course_id','=',$request->course)
                         ->where('semester_id','=',$request->semester)
                         ->where('subject_id','=',$request->subject)
+                        ->where('exam_id','=',$request->exam)
                         ->get();
         // echo "<pre>";
-        // print_r($marks_data->count());
+        // print_r($request->exam);
         // exit;
 
         if($marks_data->count()){
@@ -71,6 +74,7 @@ class MarkController extends Controller
             $marks->course_id=$request->course;
             $marks->semester_id=$request->semester;
             $marks->subject_id=$request->subject;
+            $marks->exam_id=$request->exam;
             $marks->marks_obtained=$request->marks_obtained;
             $marks->total_marks=$request->total_marks;
             if($marks->save()){
@@ -161,4 +165,3 @@ class MarkController extends Controller
 
     }
 }
-
