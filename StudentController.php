@@ -224,6 +224,7 @@ class StudentController extends Controller
         
 
 
+
         $course=Course::where('id','=',$request->course)->get();
         $duration=$course[0]->duration;
         $date = DateTime::createFromFormat("Y-m-d", $request->registration_date);
@@ -231,8 +232,22 @@ class StudentController extends Controller
         $lastyear=$year+$duration;
         $session=$year."-".$lastyear;
         
-       
-
+       $check_student=Student::where('address','=',$request->address)
+                                ->where('city_id','=',$request->city)
+                                ->where('state_id','=',$request->state)
+                                ->where('contact','=',$request->contact)
+                                ->where('course_id','=',$request->course)
+                                ->where('registration_date','=',$request->registration_date)
+                                ->where('session','=',$session)
+                                ->where('pin','=',$request->pin)
+                                ->where('father_name','=',$request->father_name)
+                                ->where('mother_name','=',$request->mother_name)
+                                ->get();
+        /*print_r($check_student->count());
+        exit;*/
+        if($check_student->count()){
+            return redirect()->route('smsStudent')->with("update_error","Same record cannot be updated");
+        }
 
         $user_data=User::find($request->id);
         $user_data->id=$request->id;

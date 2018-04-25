@@ -150,7 +150,21 @@ class FacultyController extends Controller
             'address'=>'required'
             ]);
         
-
+        $check_faculty=Faculty::where('address','=',$request->address)
+                                ->where('city_id','=',$request->city)
+                                ->where('state_id','=',$request->state)
+                                ->where('contact','=',$request->contact)
+                                ->where('department_id','=',$request->department)
+                                ->where('doj','=',$request->doj)
+                                ->where('pin','=',$request->pin)
+                                ->where('father_name','=',$request->father_name)
+                                ->where('mother_name','=',$request->mother_name)
+                                ->get();
+        /*print_r($check_student->count());
+        exit;*/
+        if($check_faculty->count()){
+            return redirect()->back()->with("update_failure","Same record cannot be updated");
+        }
 
         $user_data=User::find($request->id);
         /*echo "<pre>";
