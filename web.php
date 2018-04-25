@@ -231,9 +231,22 @@ Route::group(['middleware' => ['admin','auth']], function () {
 	Route::post('/deleteMarks','MarkController@destroy')->name('deleteMarks');
 	});
 
+	/*
+	*CRUD operations for Exams
+	*/
+	Route::get('/exams','ExamController@create')->name('exams');
+
+	Route::post('/addExam','ExamController@store')->name('addExam');
+
+	Route::post('/deleteExam','ExamController@destroy');
+
+	Route::get('/editExam/{id}','ExamController@edit');
+
+	Route::post('/update','ExamController@update')->name('updateExam');
+
+	Route::get('/getExam','ExamController@getExam');
+
+
 Route::get('import-export-view', 'ExcelController@importExportView')->name('import.export.view');
 Route::post('import-file', 'ExcelController@importFile')->name('import.file');
 Route::get('export-file/{type}', 'ExcelController@exportFile')->name('export.file');
-
-
-
