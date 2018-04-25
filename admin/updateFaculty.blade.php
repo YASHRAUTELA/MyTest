@@ -2,14 +2,23 @@
 
 @section('others')
 <a href="{{route('smsFaculty')}}" class="btn btn-primary"><i class="fa fa-arrow-left"></i></a>
-			<h4 class="title" style="text-align: center;">Update Faculty</h4>
+			<div class="row">
+				<div class="col-md-8">
+					<h4 class="title" style="text-align: center;">Update Faculty</h4>
+				</div>
+				<div class="col-sm-4">
 					@if (session('update_failure'))
-					<div class="row">
+					<div class="row" id="flash">
 						<div class="col-md-8 col-md-offset-2  alert alert-danger">
 							{{ session('update_failure') }}
 						</div>	
 					</div>
 					@endif
+				</div>
+			</div>
+
+			
+					
 
 			
 				<form method="POST" action="{{route('updateFaculty')}}">

@@ -55,24 +55,30 @@
 <div id="page-wrapper" style="background-color: white;">
 <div class="main-page" >
 	<div class="col_4">
-				@if (session('success'))
-					<div class="row" id="flash">
-						<div class="col-md-8 col-md-offset-2  alert alert-success">
-							{{ session('success') }}
-						</div>	
-					</div>
-				@endif
-                @if (session('error'))
-                    <div class="row" id="flash">
-                        <div class="col-md-8 col-md-offset-2  alert alert-danger">
-                            {{ session('error') }}
-                        </div>  
-                    </div>
-                @endif
+				
 			<div class="row">
-				<h1 style="text-align: center;">Student Marks</h1>
+                <div class="col-md-8">
+                    <h1 style="text-align: center;">Student Marks</h1>
+                </div>
+                <div class="col-md-4">
+                        @if (session('success'))
+                            <div class="row" id="flash">
+                                <div class="col-md-8 col-md-offset-2  alert alert-success">
+                                    {{ session('success') }}
+                                </div>  
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="row" id="flash">
+                                <div class="col-md-8 col-md-offset-2  alert alert-danger">
+                                    {{ session('error') }}
+                                </div>  
+                            </div>
+                        @endif
+                </div>
+				
 	    	</div>		
-	    <div>
+	    <div style="margin-top: 50px;">
 	    	<div class="row">
 	    		<form method="post" action="{{route('addMarks')}}">
 	    		{{csrf_field()}}
@@ -118,8 +124,6 @@
                 </div>
                     
                 <div class="row">
-                    
-
                     <div class="col-md-4">
                         <div class="form-group{{ $errors->has('subject') ? ' has-error' : '' }}">
                         <select class="form-control" name="subject" id="subject" readonly>
@@ -134,8 +138,27 @@
                     </div>
 
                     <div class="col-md-4">
+                        <div class="form-group{{ $errors->has('exam') ? ' has-error' : '' }}">
+                        <select class="form-control" name="exam" id="exam">
+                            <option>Select Subject</option>
+                        </select>
+                        @if ($errors->has('exam'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('exam') }}</strong>
+                            </span>
+                        @endif
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-2">
+                        <label>Obtained Marks</label>
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group{{ $errors->has('marks_obtained') ? ' has-error' : '' }}">
-                        <input type="number" min="0" class="form-control" name="marks_obtained" id="marks_obtained" value="0" placeholder="Enter Obtained Marks">
+                        <input type="number" min="0" class="form-control" name="marks_obtained" id="marks_obtained" value="0" >
                         @if ($errors->has('marks_obtained'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('marks_obtained') }}</strong>
@@ -143,10 +166,12 @@
                         @endif
                         </div>
                     </div>
-
+                    <div class="col-md-2">
+                        <label>Total Marks</label>
+                    </div>
                     <div class="col-md-4">
                         <div class="form-group{{ $errors->has('total_marks') ? ' has-error' : '' }}">
-                        <input type="number" min="0" class="form-control" name="total_marks" id="total_marks" placeholder="Enter Total Marks" value="100">
+                        <input type="number" min="0" class="form-control" name="total_marks" id="total_marks"  value="100">
                         @if ($errors->has('total_marks'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('total_marks') }}</strong>
@@ -176,6 +201,7 @@
 					<th style="text-align: center;">COURSE</th>
 					<th style="text-align: center;">SEMESTER</th>
 					<th style="text-align: center;">SUBJECT</th>
+                    <th style="text-align: center;">EXAM</th>
                     <th style="text-align: center;">OBTAINED MARKS</th>
                     <th style="text-align: center;">TOTAL MARKS</th>
                     <th style="text-align: center;">ACTION</th>
@@ -190,6 +216,7 @@
                     <td>{{$data->course}}</td>
                     <td>{{$data->semester}}</td>
                     <td>{{$data->subject}}</td>
+                    <td>{{$data->exam_type}}</td>
                     <td>{{$data->marks_obtained}}</td>
                     <td>{{$data->total_marks}}</td>
                     <td><a href="{{url('/editMarks',$data->id)}}" class="btn btn-warning"><i class="fa fa-edit">Edit
@@ -283,7 +310,7 @@
             },
             success: function(data) {
                 console.log(data);
-                
+                $('#myDeleteModal').modal('hide');
                 if(data==200){
                     (function () {
                         var x = document.getElementById("snackbar");
@@ -322,6 +349,22 @@
                     
                 }
             });
+
+        $.ajax({
+                type:'GET',
+                url:'/getExam',
+                success:function(data){
+                    console.log(data);
+                    $("#exam").empty();
+                    $("#exam").append("<option value=''>Select Exam</option>");
+                    $.each(data,function(key,value){
+                        $("#exam").append("<option value='"+value.id+"'>"+value.exam_type+"</option>");
+                    });
+                    
+                }
+            });
+
+
 	}
     $(document).ready(function(){
       $('#student').change(function(){

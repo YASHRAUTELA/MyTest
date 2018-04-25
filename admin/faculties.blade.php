@@ -1,15 +1,21 @@
 @extends('admin.adminDefault')
 
 @section('others')
-					@if (session('update_success'))
-					<div class="row" id="flash">
-						<div class="col-md-8 col-md-offset-2  alert alert-success">
-							{{ session('update_success') }}
-						</div>	
+				<div class="row">
+					<div class="col-md-8" style="text-align: center; height: 100px;">
+						<h4 class="title">Faculty</h4>
+
 					</div>
-					@endif
-					<h4 class="title">Faculty</h4>
-					
+					<div class="col-md-4">
+						@if (session('update_success'))
+						<div class="row" id="flash">
+							<div class="col-md-8 col-md-offset-2  alert alert-success">
+								{{ session('update_success') }}
+							</div>	
+						</div>
+						@endif	
+					</div>
+				</div>	
 					<div class="row">
 						<div class="col-md-1 col-sm-1"><label>ID</label></div>
 						<div class="col-md-2 col-sm-3"><label>Name</label></div>

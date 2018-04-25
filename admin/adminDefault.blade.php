@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div id="page-wrapper">
+<div id="page-wrapper" style="background-color: white;">
 <div class="main-page">
 	<div class="col_4">
 		<div class="row">
