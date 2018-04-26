@@ -1,53 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Http\Request;
 use DB;
 use App\Student;
 use App\Faculty;
 use App\Mail;
 use App\VerifyUser;
+use App\Mark;
 class UserController extends Controller
 {
+
 	public function deleteUserInfo(Request $request){
 		$user=User::find($request->id);
-		// return response()->json($user);
 
 		if($user->role_id==1){
-			/*return response()->json('admin');
 			$user->delete();
-			return response()->json('admin data deleted successfully');*/
-			if($user->id==1){
-				return response()->json('main admin cannot be deleted');
-			}
-			else{
-				return response()->json('admin data deleted successfully');
-				// $verify_user=VerifyUser::where('user_id','=',$request->id)
-				// 			->get();
-
-
-				// $admin_mail=Mail::where('to_email','=',$user->email)
-				// 					->orWhere('from_email','=',$user->email)
-				// 					->get();
-				
-
-				// if($verify_user->count()){
-
-				// 		$verify_user=VerifyUser::where('user_id','=',$request->id)
-				// 			->delete();
-				// }
-
-				// if($admin_mail->count()){
-				// 		$admin_mail=Mail::where('to_email','=',$user->email)
-				// 					->orWhere('from_email','=',$user->email)
-				// 					->delete();
-				// }
-				// $user->delete();
-				// return response()->json('admin and its all associated data deleted successfully');	
-			}
-			
+			return response()->json('admin data deleted successfully');
 		}
 		elseif($user->role_id==2){
 
@@ -60,14 +30,12 @@ class UserController extends Controller
 								->orWhere('from_email','=',$user->email)
 								->get();
 
-			//true if faculty_data exists in faculty data
 			if($faculty->count()){
 				$faculty[0]->delete();
 			}
 
 			if($verify_user->count()){
-
-					$verify_user=VerifyUser::where('user_id','=',$request->id)
+				$verify_user=VerifyUser::where('user_id','=',$request->id)
 						->delete();
 			}
 
@@ -77,13 +45,23 @@ class UserController extends Controller
 								->delete();
 			}
 			$user->delete();
-			return response()->json('faculty and its all associated data deleted successfully');
 
+			return response()->json('faculty and its all associated data deleted successfully');
 		}
 		else{
-			
+			// $user=User::find($request->id);
+
+			// $student=$user->student;
 			$student=Student::where('user_id','=',$request->id)->get();
+			//return response()->json($student->count());
+
+			if($student->count()){
+				$marks=Mark::where('student_id','=',$student[0]->id)->get();	
+			}
 			
+
+			
+
 			$verify_user=VerifyUser::where('user_id','=',$request->id)
 						->get();
 
@@ -91,27 +69,54 @@ class UserController extends Controller
 			$student_mail=Mail::where('to_email','=',$user->email)
 								->orWhere('from_email','=',$user->email)
 								->get();
+			//return response()->json(sizeof($student));
 			
+
 			if($student->count()){
+				
+				if($marks->count()){
+					// return response()->json($marks[0]);
+					$marks[0]->delete();
+				}
 				$student[0]->delete();
 			}
 
 			if($verify_user->count()){
-
-					$verify_user=VerifyUser::where('user_id','=',$request->id)
+				$verify_user=VerifyUser::where('user_id','=',$request->id)
 						->delete();
 			}
 
 			if($student_mail->count()){
-					$student_mail=Mail::where('to_email','=',$user->email)
-								->orWhere('from_email','=',$user->email)
-								->delete();
+				$student_mail=Mail::where('to_email','=',$user->email)
+							->orWhere('from_email','=',$user->email)
+							->delete();
 			}
 			$user->delete();
 			return response()->json('student and its all associated data deleted successfully');
+
+			/*$student=Student::where('user_id','=',$request->id)->get();
+			
+			$verify_user=VerifyUser::where('user_id','=',$request->id)
+						->delete();
+
+			
+			$student_mail=Mail::where('to_email','=',$user->email)
+								->orWhere('from_email','=',$user->email)
+								->delete();
+			
+			
+
+			if($student->count()){
+				$student->delete();
+				$user->delete();
+				return response()->json('student data deleted successfully');
+			}
+			else{
+				$user->delete();
+				return response()->json('student data deleted successfully');
+			}*/
 		}
 	}
-
 
 	/*
 	*Performing update operation on user data
@@ -184,3 +189,4 @@ class UserController extends Controller
         }
     }
 }
+

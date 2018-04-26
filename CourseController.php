@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Course;
 use Illuminate\Http\Request;
 use DB;
-
+use App\Mark;
+use App\User;
 class CourseController extends Controller
 {
 
@@ -115,8 +116,39 @@ class CourseController extends Controller
      */
     public function destroy(Request $request)
     {
-        Course::find($request->id)->delete();
-        return response()->json("deletion successful");
+        //fetch course
+        $course=Course::find($request->id);
+
+        $marks=$course->marks;
+
+        if($marks->count()){
+            return response()->json(404);
+        }
+        else{
+            $semesters=$course->semesters;
+            //if semester exists with the selected course
+            if($semesters->count()){
+                return response()->json(404);
+            }
+            else{
+                //if the students are registered with the selected course
+                $students=$course->students;
+                if($students->count()){
+                    return response()->json(404);
+                }
+                else{
+                    //if the subjects are exists with the selected course
+                    $subjects=$course->subjects;
+                    if($subjects->count()){
+                        return response()->json(404);
+                    }
+                    else{
+                        $course->delete();
+                        return response()->json(200);
+                    }
+                }
+            }
+        }
     }
 
     public function addCourse(Request $request){
