@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\State;
+use App\Role;
 use Illuminate\Http\Request;
 
-class StateController extends Controller
+class RoleController extends Controller
 {
-    public function getStateData(){
-        $state=State::all();
-        return response()->json($state);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -19,9 +14,7 @@ class StateController extends Controller
      */
     public function index()
     {
-        $state_data=State::all();
-        
-        return view('crud.state')->with('state_data',$state_data);
+        //
     }
 
     /**
@@ -42,20 +35,16 @@ class StateController extends Controller
      */
     public function store(Request $request)
     {
-        $state_data=new State;
-        $state_data->state_name=$request->state;
-        $state_data->save();
-
-        return response()->json($state_data);
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\State  $state
+     * @param  \App\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function show(State $state)
+    public function show(Role $role)
     {
         //
     }
@@ -63,10 +52,10 @@ class StateController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\State  $state
+     * @param  \App\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function edit(State $state)
+    public function edit(Role $role)
     {
         //
     }
@@ -75,26 +64,22 @@ class StateController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\State  $state
+     * @param  \App\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, State $state)
+    public function update(Request $request, Role $role)
     {
-        $state_data=State::find($request->id);
-        $state_data->state_name=$request->state;
-        $state_data->save();
-
-        return response()->json($state_data);
+        //
     }
 
     /**
      * Remove the specified resource from storage.
-     * @param  \Illuminate\Http\Request  $request
+     *
+     * @param  \App\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Role $role)
     {
-        State::find($request->id)->delete();
-        return response()->json("deletion successful");
+        //
     }
 }

@@ -5,8 +5,36 @@ namespace App\Http\Controllers;
 use App\Mark;
 use Illuminate\Http\Request;
 use DB;
+use Auth;
 class MarkController extends Controller
 {
+
+    public function getResult(Request $request){
+        $data=$request->validate([
+            'exam'=>'required',
+            'semester'=>'required'
+            ]);
+
+        $marks= DB::table('marks')
+                    ->join('students','students.id','=','marks.student_id')
+                    ->join('exams','exams.id','=','marks.exam_id')
+                    ->join('courses','courses.id','=','marks.course_id')
+                    ->join('semesters','semesters.id','=','marks.semester_id')
+                    ->join('users','users.id','=','students.user_id')
+                    ->join('subjects','subjects.id','=','marks.subject_id')
+                    ->select('subjects.subject','marks.marks_obtained','marks.total_marks')
+                    ->where('exams.id','=',$request->exam)
+                    ->where('semesters.id','=',$request->semester)
+                    ->where('users.id','=',Auth::user()->id)
+                    ->get();
+        
+        if($marks->count()){
+            return view('student.displayMarks')->with('marks',$marks);    
+        }else{
+            return redirect()->route('noMarks');
+        }
+        
+    }
     /**
      * Display a listing of the resource.
      *
@@ -165,4 +193,3 @@ class MarkController extends Controller
 
     }
 }
-

@@ -55,7 +55,6 @@ class ExamController extends Controller
             if($exam->save()){
                 return redirect()->back()->with('success','exam added successfully');    
             }
-            
         }
     }
 
@@ -128,4 +127,3 @@ class ExamController extends Controller
         }
     }
 }
-

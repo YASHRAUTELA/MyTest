@@ -122,4 +122,3 @@ class CityController extends Controller
         return response()->json("deletion successful");
     }
 }
-

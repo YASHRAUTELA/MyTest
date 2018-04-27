@@ -8,9 +8,34 @@ use DateTime;
 use App\Course;
 use App\User;
 use DB;
+use App\Exam;
+use Auth;
 
 class StudentController extends Controller
 {
+    public function getSemesterData(Request $request){
+        $users=User::find(Auth::user()->id);
+
+        $student=$users->student;
+
+        $course=$student->course;
+
+        // $course_name=$course->course;
+
+        $semester=$course->semesters;
+
+        return response()->json($semester);
+    }
+
+    public function myMarks(){
+        return view('student.myMarks');
+    }
+
+    public function noMarks(){
+        return view('student.marksNotAvailable');
+    }
+
+
     public function getStudentCourse(Request $request){
         
 
@@ -316,4 +341,3 @@ class StudentController extends Controller
         //
     }
 }
-

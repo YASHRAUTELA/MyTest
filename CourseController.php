@@ -160,4 +160,3 @@ class CourseController extends Controller
         return response()->json($course_data);
     }
 }
-
