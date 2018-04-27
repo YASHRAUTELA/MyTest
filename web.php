@@ -85,6 +85,16 @@ Route::group(['middleware'=>'auth'],function(){
 
 	Route::post('/change/Image','HomeController@changeImage')->name('changeImage');
 
+	/*
+	*Routes to display student marks
+	*/
+	Route::get('/myMarks','StudentController@myMarks')->name('myMarks');
+
+	Route::post('/getSemesterData','StudentController@getSemesterData');
+
+	Route::post('/getResult','MarkController@getResult')->name('getResult');
+
+	Route::get('/noMarks','StudentController@noMarks')->name('noMarks');
 	
 
 });
@@ -152,6 +162,8 @@ Route::group(['middleware' => ['admin','auth']], function () {
 	Route::get('/studentInfo','StudentController@index')->name('studentInfo');
 
 	Route::post('/addStudentInfo','StudentController@store')->name('addStudentInfo');
+
+
 
 	/*
 	*Display Student, faculty, and other admin details to Admin

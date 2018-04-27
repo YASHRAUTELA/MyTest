@@ -1,8 +1,8 @@
 @extends('admin.adminDefault')
 
 @section('others')
-				<div class="row" style="height: 100px; text-align: center;">
-					<div class="col-md-8">
+				<div class="row" >
+					<div class="col-md-8" style="text-align: center;">
 						<h4 class="title">Students</h4>
 
 					</div>

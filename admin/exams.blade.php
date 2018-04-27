@@ -2,7 +2,7 @@
 
 @section('style')
 
-    <style>
+<style>
 
 #snackbar {
     visibility: hidden;

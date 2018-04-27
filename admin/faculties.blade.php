@@ -170,7 +170,7 @@
             },
             success: function(data) {
             	console.log(data);
-            	window.location="{{route('smsStudent')}}";
+            	window.location="{{route('smsFaculty')}}";
             }
         });
 	}
