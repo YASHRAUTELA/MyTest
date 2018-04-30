@@ -1,7 +1,5 @@
 @extends('layouts.admin')
-
 @section('style')
-
 <style>
 
 #snackbar {
@@ -47,192 +45,212 @@
 }
 </style>
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
-
 @endsection
-
 @section('content')
+<div class="col_1" id="page-wrapper" style="background-color: white;">
+    <div class="form-group row add col_1">
 
-<div id="page-wrapper" style="background-color: white;">
-<div class="main-page" >
-	<div class="col_4">
-        <div style="height: 100px;">
-            @if (session('success'))
-                    <div class="row" id="flash">
-                        <div class="col-md-8 col-md-offset-2  alert alert-success">
-                            {{ session('success') }}
-                        </div>  
-                    </div>
-                @endif
-                @if (session('error'))
-                    <div class="row" id="flash">
-                        <div class="col-md-8 col-md-offset-2  alert alert-danger">
-                            {{ session('error') }}
-                        </div>  
-                    </div>
-                @endif
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="exam_type" name="exam_type"
+                    placeholder="Enter Exam" required>
+                <p class="error text-center alert alert-danger hidden"></p>
+            </div>
+
+            
+
+            <div class="col-md-4">
+                <button class="btn btn-primary" type="submit" id="add">
+                    <span class="glyphicon glyphicon-plus"></span> ADD
+                </button>
+            </div>
         </div>
-						
-	    <div>
-	    	<div class="row" style="margin:0px 100px;">
-	    		<form method="post" action="{{route('addExam')}}">
-	    		{{csrf_field()}}
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group{{ $errors->has('exam') ? ' has-error' : '' }}">
-                            <input type="text" name="exam" id="exam" class="form-control" placeholder="Enter Exam Name" autofocus>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <button class="btn btn-primary"><i class="fa fa-edit"></i>Add</button>
-                    </div>
-                </div>
-	    		</form>	
-	    	</div>
-		</div>
-		<div class="table-responsive text-center">
-		<table class="table table-borderless display" id="table" style="width:100%">
-			<thead>
-				<tr>
-					<th style="text-align: center;">ID</th>
-					<th style="text-align: center;">EXAM</th>
-                    <th style="text-align: center;">ACTION</th>
-				</tr>
-			</thead>
-            <tbody>
-            @foreach($exams as $data)
-                <tr>
-                    <td>{{$data->id}}</td>
-                    <td>{{$data->exam_type}}</td>
-                    <td>
-                        <a href="{{url('/editExam',$data->id)}}" class="btn btn-warning"><i class="fa fa-edit">Edit</i></a>
-                        <a href="#" onclick="deleteInfo({{$data->id}})" data-toggle="modal" class="btn btn-danger"><i class="fa fa-trash">Delete</i></a>
-                    </td>
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+        <div class="table-responsive text-center">
+            <table class="table table-borderless" id="table">
+                <thead >
+                    <tr>
+                        <th style="text-align: center;">ID</th>
+                        <th style="text-align: center;">EXAMS</th>
+                        <th style="text-align: center;">ACTION</th>
+                    </tr>
+                </thead>
+                @foreach($exams as $data)   
+                    <tr class="item{{$data->id}}">
+                        <td>{{$data->id}}</td>
+                        <td>{{$data->exam_type}}</td>
+                        <td><button class="edit-modal btn btn-info" data-id="{{$data->id}}" data-exam_type="{{$data->exam_type}}">
+                            <span class="glyphicon glyphicon-edit"></span> Edit
+                            </button>
+                            <button class="delete-modal btn btn-danger" data-id="{{$data->id}}" data-exam_type="{{$data->exam_type}}">
+                                <span class="glyphicon glyphicon-trash"></span> Delete
+                            </button>
+                        </td>
                 </tr>
-            @endforeach
-            </tbody>
-		</table>
-		</div>
-	</div>
-</div>
-</div>
+                @endforeach 
+            </table>
+        </div>
 
-<div class="modal fade" id="myDeleteModal" role="dialog">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Delete Admin</h4>
-        </div>
-        <div class="modal-body">
-          	<div class="row">
-          		<div class="alert alert-danger">
-					<strong>Do you really want to delete this Subject <span id="user_name" style="font-weight: bold; font-size: 14px;"></span>?</strong>
-				</div>
-          	</div>
-          	<div class="row">
-          		<div class="col-md-12" id="confirm_delete">
-          			
-          		</div>
-          	</div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
-    </div>
-</div>
-
-
-<div class="modal fade" id="myDeleteModal" role="dialog">
-    <div class="modal-dialog">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Delete Admin</h4>
-        </div>
-        <div class="modal-body">
-            <div class="row">
-                <div class="alert alert-danger">
-                    <strong>Do you really want to delete this Subject <span id="user_name" style="font-weight: bold; font-size: 14px;"></span>?</strong>
+        <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"></h4>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12" id="confirm_delete">
-                    
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="id">ID:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="fid" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="exam_type">EXAM:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="n">
+                            </div>
+                        </div>
+                    </form>
+                    <div class="deleteContent">
+                        Are you Sure you want to delete <span class="dname"></span> ? <span
+                            class="hidden did"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn actionBtn" data-dismiss="modal">
+                            <span id="footer_action_button" class='glyphicon'> </span>
+                        </button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">
+                            <span class='glyphicon glyphicon-remove'></span> Close
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-      
     </div>
 </div>
+<br>
+<br>
 <div id="snackbar">Data Deleted Successfully..</div>
+
 @endsection
 
 @push('script')
 
-<script type="text/javascript">
-	function deleteInfo(id){
-        console.log(id);
-        $("#confirm_delete").html("<a class='btn btn-danger' onclick='deleteExam("+id+")'>Confirm Delete</a>");
-        $('#myDeleteModal').modal('show');
-    }
-
-    function deleteExam(id){
-        $.ajax({
-            type: 'POST',
-            url: '/deleteExam',
-            data: {
-                '_token': $('input[name=_token]').val(),
-                'id':id
-            },
-            success: function(data) {
-                console.log(data);
-                $('#myDeleteModal').modal('hide');
-                if(data==200){
-                    (function () {
-                        var x = document.getElementById("snackbar");
-                        x.className = "show";
-                        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2000);     // I will invoke myself
-                    })();
-                }else{
-                    (function () {
-                        var x = document.getElementById("snackbar");
-                        $("#snackbar").text("The Exam that you want to delete, is already in use.");
-                        x.className = "show";
-                        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2000);     // I will invoke myself
-                    })();
-                }
-                setInterval(myTimer, 2000);
-                function myTimer(){
-                    
-                    window.location="{{route('exams')}}";
-                }
-
-            }
-        });
-    }
-    $(function(){
-        $('#flash').delay(500).fadeIn('normal',function(){
-            $(this).delay(2000).fadeOut();
-        });
-    });
-
-    $(document).ready(function() {
+    <script>
+        $(document).ready(function() {
             $('#table').DataTable();
         });
 
 
-    </script>
 
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-	
+    function myFunction(){
+        
+    }
 
+    $(document).on('click', '.edit-modal', function() {
+        $('#footer_action_button').text(" Update");
+        $('#footer_action_button').addClass('glyphicon-check');
+        $('#footer_action_button').removeClass('glyphicon-trash');
+        $('.actionBtn').addClass('btn-success');
+        $('.actionBtn').removeClass('btn-danger');
+        $('.actionBtn').addClass('edit');
+        $('.actionBtn').removeClass('delete');
+        $('.modal-title').text('Edit');
+        $('.deleteContent').hide();
+        $('.form-horizontal').show();
+        $('#fid').val($(this).data('id'));
+        $('#n').val($(this).data('exam_type'));
+        $('#myModal').modal('show');
+    });
+    $(document).on('click', '.delete-modal', function() {
+        $('#footer_action_button').text(" Delete");
+        $('#footer_action_button').removeClass('glyphicon-check');
+        $('#footer_action_button').addClass('glyphicon-trash');
+        $('.actionBtn').removeClass('btn-success');
+        $('.actionBtn').addClass('btn-danger');
+        $('.actionBtn').addClass('delete');
+        $('.actionBtn').removeClass('edit');
+        $('.modal-title').text('Delete');
+        $('.did').text($(this).data('id'));
+        $('.deleteContent').show();
+        $('.form-horizontal').hide();
+        $('.dname').html($(this).data('exam_type'));
+        $('#myModal').modal('show');
+    });
+
+    $('.modal-footer').on('click', '.edit', function() {
+
+        $.ajax({
+            type: 'POST',
+            url: '/editExam',
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'id': $("#fid").val(),
+                'exam_type': $('#n').val()
+            },
+            success: function(data) {
+                //console.log(data);
+                $('.item' + data.id).replaceWith("<tr class='item" + data.id + "'><td>" + data.id + "</td><td>" + data.exam_type +"</td><td><button class='edit-modal btn btn-info' data-id='" + data.id + "' data-exam_type='" + data.exam_type+"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-exam_type='" + data.exam_type +"' ><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+            }
+        });
+    });
+    $("#add").click(function() {
+        $.ajax({
+            type: 'post',
+            url: '/addExam',
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'exam_type': $('input[name=exam_type]').val()
+            },
+            success: function(data) {
+                console.log(data);
+                if ((data.errors)){
+                    $('.error').removeClass('hidden');
+                    $('.error').text(data.errors.exam_type);
+                }
+                else {
+                    console.log(data);
+                    $('.error').addClass('hidden');
+                    $('#table').append("<tr class='item" + data.id + "'><td>" + data.id + "</td><td>" + data.exam_type +"</td><td><button class='edit-modal btn btn-info' data-id='" + data.id + "' data-exam_type='" + data.exam_type +"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-exam_type='" + data.exam_type+"'><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+
+
+                }
+            },
+        });
+        $('#exam_type').val('');
+    });
+    $('.modal-footer').on('click', '.delete', function() {
+        $.ajax({
+            type: 'post',
+            url: '/deleteExam',
+            data: {
+                '_token': $('input[name=_token]').val(),
+                'id': $('.did').text()
+            },
+            success: function(data) {
+                if(data==200){
+                    $('.item' + $('.did').text()).remove();
+                    (function () {
+                    var x = document.getElementById("snackbar");
+                    x.className = "show";
+                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2000);
+                    })();    
+                }
+                else{
+                    (function () {
+                    var x = document.getElementById("snackbar2");
+                    $("#snackbar").text("data cannot be deleted due to some foreign key constraint");
+                    x.className = "show";
+                    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2000);     // I will invoke myself
+                    })();
+                }
+                
+            }
+        });
+    });
+</script>
+
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 @endpush

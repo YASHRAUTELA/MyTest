@@ -7,6 +7,15 @@ use Illuminate\Http\Request;
 use App\Mark;
 class ExamController extends Controller
 {
+
+    public function editExam(Request $request){
+        /*$exam=Exam::find($request->id);
+        return response()->json($exam);*/
+        $exam=Exam::find($request->id);
+        $exam->exam_type=$request->exam_type;
+        $exam->save();
+        return response()->json($exam);
+    }
     public function getExam(){
         $exam=Exam::all();
         return response()->json($exam);
@@ -44,16 +53,19 @@ class ExamController extends Controller
     public function store(Request $request)
     {
         $data=$request->validate([
-            'exam'=>'required'
+            'exam_type'=>'required'
             ]);
-        $exam=Exam::where('exam_type','=',$request->exam)->get();
+       // return response()->json('hello');
+        $exam=Exam::where('exam_type','=',$request->exam_type)->get();
         if($exam->count()){
-            return redirect()->back()->with('error','your entered exam already exist');
+            //return redirect()->back()->with('error','your entered exam already exist');
+            return response()->json($exam);
         }else{
             $exam=new Exam;
-            $exam->exam_type=$request->exam;
+            $exam->exam_type=$request->exam_type;
             if($exam->save()){
-                return redirect()->back()->with('success','exam added successfully');    
+                // return redirect()->back()->with('success','exam added successfully');    
+                return response()->json($exam);
             }
         }
     }
@@ -127,3 +139,4 @@ class ExamController extends Controller
         }
     }
 }
+
