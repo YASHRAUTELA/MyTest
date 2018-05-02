@@ -13,8 +13,8 @@
     padding: 16px;
     position: fixed;
     z-index: 1;
-    left: 50%;
-    bottom: 30px;
+    right: 0;
+    top: 100px;
     font-size: 17px;
 }
 
@@ -25,23 +25,23 @@
 }
 
 @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;} 
-    to {bottom: 30px; opacity: 1;}
+    from {top: 0; opacity: 0;} 
+    to {top: 100px; opacity: 1;}
 }
 
 @keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 30px; opacity: 1;}
+    from {top: 0; opacity: 0;}
+    to {top: 100px; opacity: 1;}
 }
 
 @-webkit-keyframes fadeout {
-    from {bottom: 30px; opacity: 1;} 
-    to {bottom: 0; opacity: 0;}
+    from {top: 100px; opacity: 1;} 
+    to {top: 0; opacity: 0;}
 }
 
 @keyframes fadeout {
-    from {bottom: 30px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from {top: 100px; opacity: 1;}
+    to {top: 0; opacity: 0;}
 }
 </style>
     <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
@@ -49,9 +49,13 @@
 @section('content')
 <div class="col_1" id="page-wrapper" style="background-color: white;">
     <div class="form-group row add col_1">
-            <div class="alert alert-danger print-error-msg" style="display:none">
+        
+
+            <div id="flash" class="alert alert-danger print-error-msg" style="display:none">
                 <ul></ul>
             </div>
+       
+            
 
             <div class="col-md-6">
                 <input type="text" class="form-control" id="exam_type" name="exam_type"
@@ -208,24 +212,29 @@
                 'exam_type': $('input[name=exam_type]').val()
             },
             success: function(data) {
-                console.log(data);
-                /*if ((data.errors)){
-                    $('.error').removeClass('hidden');
-                    $('.error').text(data.errors.exam_type);
-                }
-                else {
-                    console.log(data);
-                    $('.error').addClass('hidden');
-                    $('#table').append("<tr class='item" + data.id + "'><td>" + data.id + "</td><td>" + data.exam_type +"</td><td><button class='edit-modal btn btn-info' data-id='" + data.id + "' data-exam_type='" + data.exam_type +"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-exam_type='" + data.exam_type+"'><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
-
-
-                }*/
-
-
                 if($.isEmptyObject(data.error)){
                         console.log(data);
-                        $('.error').addClass('hidden');
-                        $('#table').append("<tr class='item" + data.id + "'><td>" + data.id + "</td><td>" + data.exam_type +"</td><td><button class='edit-modal btn btn-info' data-id='" + data.id + "' data-exam_type='" + data.exam_type +"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-exam_type='" + data.exam_type+"'><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+                        if(data==404){
+                            /*displaying exam already exist message*/
+                            (function () {
+                            var x = document.getElementById("snackbar");
+                            $("#snackbar").text("exam type already exist");
+                            x.className = "show";
+                            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2000);     // I will invoke myself
+                            })();
+                        }else{
+                            $('.error').addClass('hidden');
+                            $('#table').append("<tr class='item" + data.id + "'><td>" + data.id + "</td><td>" + data.exam_type +"</td><td><button class='edit-modal btn btn-info' data-id='" + data.id + "' data-exam_type='" + data.exam_type +"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-exam_type='" + data.exam_type+"'><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+
+                            (function () {
+                                var x = document.getElementById("snackbar");
+                                $("#snackbar").text("data added successfully");
+                                x.className = "show";
+                                setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2000);     // I will invoke myself
+                            })();
+                        }
+                        
+
                 }else{
                     printErrorMsg(data.error);
                 }
@@ -244,10 +253,6 @@
         }
 
 
-
-
-
-    
     $('.modal-footer').on('click', '.delete', function() {
         $.ajax({
             type: 'post',
@@ -261,13 +266,14 @@
                     $('.item' + $('.did').text()).remove();
                     (function () {
                     var x = document.getElementById("snackbar");
+                    $("#snackbar").text("data deleted successfully");
                     x.className = "show";
                     setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2000);
                     })();    
                 }
                 else{
                     (function () {
-                    var x = document.getElementById("snackbar2");
+                    var x = document.getElementById("snackbar");
                     $("#snackbar").text("data cannot be deleted due to some foreign key constraint");
                     x.className = "show";
                     setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2000);     // I will invoke myself
@@ -275,6 +281,12 @@
                 }
                 
             }
+        });
+    });
+
+    $(function(){
+        $('#flash').delay(500).fadeIn('normal',function(){
+            $(this).delay(2000).fadeOut();
         });
     });
 </script>

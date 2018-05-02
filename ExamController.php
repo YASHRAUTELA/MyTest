@@ -10,12 +10,20 @@ class ExamController extends Controller
 {
 
     public function editExam(Request $request){
-        /*$exam=Exam::find($request->id);
-        return response()->json($exam);*/
-        $exam=Exam::find($request->id);
-        $exam->exam_type=$request->exam_type;
-        $exam->save();
-        return response()->json($exam);
+        $validator=Validator::make($request->all(),[
+                'exam_type'=>'required'
+            ]);
+
+        if($validator->passes()){
+            // return response()->json($request->exam_type);
+            $exam=Exam::find($request->id);
+            $exam->exam_type=$request->exam_type;
+            $exam->save();
+            return response()->json($exam);
+        }
+        return response()->json(['error'=>$validator->errors()->all()]);
+
+       
     }
     public function getExam(){
         $exam=Exam::all();
@@ -39,9 +47,7 @@ class ExamController extends Controller
     public function create()
     {
         $exam=Exam::all();
-        // echo "<pre>";
-        // print_r($exam);
-        // exit;
+        
         return view('admin.exams')->with('exams',$exam);
     }
 
@@ -53,10 +59,6 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
-        /*$data=$request->validate([
-            'exam_type'=>'required'
-            ]);*/
-
 
         $validator=Validator::make($request->all(),[
                 'exam_type'=>'required'
@@ -66,7 +68,7 @@ class ExamController extends Controller
             $exam=Exam::where('exam_type','=',$request->exam_type)->get();
             
             if($exam->count()){
-                return response()->json($exam);
+                return response()->json(404);
             }
             else{
                 $exam=new Exam;
