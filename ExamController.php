@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exam;
 use Illuminate\Http\Request;
 use App\Mark;
+use Validator;
 class ExamController extends Controller
 {
 
@@ -52,22 +53,33 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
-        $data=$request->validate([
+        /*$data=$request->validate([
             'exam_type'=>'required'
+            ]);*/
+
+
+        $validator=Validator::make($request->all(),[
+                'exam_type'=>'required'
             ]);
-       // return response()->json('hello');
-        $exam=Exam::where('exam_type','=',$request->exam_type)->get();
-        if($exam->count()){
-            //return redirect()->back()->with('error','your entered exam already exist');
-            return response()->json($exam);
-        }else{
-            $exam=new Exam;
-            $exam->exam_type=$request->exam_type;
-            if($exam->save()){
-                // return redirect()->back()->with('success','exam added successfully');    
+
+        if($validator->passes()){
+            $exam=Exam::where('exam_type','=',$request->exam_type)->get();
+            
+            if($exam->count()){
                 return response()->json($exam);
             }
+            else{
+                $exam=new Exam;
+                $exam->exam_type=$request->exam_type;
+                
+                if($exam->save()){
+                    return response()->json($exam);
+                }
+            }
+            // return response()->json(['success'=>'Added new records.']);
+
         }
+        return response()->json(['error'=>$validator->errors()->all()]);
     }
 
     /**

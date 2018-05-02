@@ -49,6 +49,9 @@
 @section('content')
 <div class="col_1" id="page-wrapper" style="background-color: white;">
     <div class="form-group row add col_1">
+            <div class="alert alert-danger print-error-msg" style="display:none">
+                <ul></ul>
+            </div>
 
             <div class="col-md-6">
                 <input type="text" class="form-control" id="exam_type" name="exam_type"
@@ -206,7 +209,7 @@
             },
             success: function(data) {
                 console.log(data);
-                if ((data.errors)){
+                /*if ((data.errors)){
                     $('.error').removeClass('hidden');
                     $('.error').text(data.errors.exam_type);
                 }
@@ -216,11 +219,35 @@
                     $('#table').append("<tr class='item" + data.id + "'><td>" + data.id + "</td><td>" + data.exam_type +"</td><td><button class='edit-modal btn btn-info' data-id='" + data.id + "' data-exam_type='" + data.exam_type +"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-exam_type='" + data.exam_type+"'><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
 
 
+                }*/
+
+
+                if($.isEmptyObject(data.error)){
+                        console.log(data);
+                        $('.error').addClass('hidden');
+                        $('#table').append("<tr class='item" + data.id + "'><td>" + data.id + "</td><td>" + data.exam_type +"</td><td><button class='edit-modal btn btn-info' data-id='" + data.id + "' data-exam_type='" + data.exam_type +"'><span class='glyphicon glyphicon-edit'></span> Edit</button> <button class='delete-modal btn btn-danger' data-id='" + data.id + "' data-exam_type='" + data.exam_type+"'><span class='glyphicon glyphicon-trash'></span> Delete</button></td></tr>");
+                }else{
+                    printErrorMsg(data.error);
                 }
+
+
             },
         });
         $('#exam_type').val('');
     });
+    function printErrorMsg (msg) {
+            $(".print-error-msg").find("ul").html('');
+            $(".print-error-msg").css('display','block');
+            $.each( msg, function( key, value ) {
+                $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+            });
+        }
+
+
+
+
+
+    
     $('.modal-footer').on('click', '.delete', function() {
         $.ajax({
             type: 'post',
