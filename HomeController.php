@@ -12,6 +12,13 @@ use App\Student;
 use App\Faculty;
 class HomeController extends Controller
 {
+    public function aboutUs(){
+        return view('aboutUs');
+    }
+
+    public function contactUs(){
+        return view('contactUs');
+    }
     /**
      * Create a new controller instance.
      *
