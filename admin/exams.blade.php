@@ -50,11 +50,11 @@
 <div class="col_1" id="page-wrapper" style="background-color: white;">
     <div class="form-group row add col_1">
         
-
+        <div  style="height: 60px;">
             <div id="flash" class="alert alert-danger print-error-msg" style="display:none">
                 <ul></ul>
             </div>
-       
+        </div>
             
 
             <div class="col-md-6">
@@ -250,6 +250,7 @@
             $.each( msg, function( key, value ) {
                 $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
             });
+            displayFlash();
         }
 
 
@@ -284,11 +285,16 @@
         });
     });
 
-    $(function(){
+    function displayFlash(){
         $('#flash').delay(500).fadeIn('normal',function(){
             $(this).delay(2000).fadeOut();
         });
-    });
+    }
+/*    $(function(){
+        $('#flash').delay(500).fadeIn('normal',function(){
+            $(this).delay(2000).fadeOut();
+        });
+    });*/
 </script>
 
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
